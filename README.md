@@ -101,7 +101,7 @@
 
 ### 2.2 运行环境
 
-系统开发平台为Pycharm，程序设计语言采用Python，程序设计框架为Pytorch。
+系统开发平台为Pycharm，程序设计语言采用Python。
 
 可以在Windows10、Ubuntu16.04运行。 
 
