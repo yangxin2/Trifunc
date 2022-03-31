@@ -3,8 +3,7 @@ import math
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QComboBox, QHBoxLayout, QVBoxLayout, QPushButton, \
     QLineEdit, QLabel
-from function import *
-from utils import *
+from function_Final import *
 
 class Interface_method:
 
