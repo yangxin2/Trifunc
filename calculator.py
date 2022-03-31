@@ -5,29 +5,24 @@ from PyQt5.QtWidgets import QApplication, QWidget, QDesktopWidget, QComboBox, QH
     QLineEdit, QLabel
 from function_Final import *
 
+
 class Interface_method:
 
-    def __init__(self):
-        self.valueFunctions = {
-            'sin': self.sin,
-            'arcsin': self.arcsin,
-            'cos': self.cos,
-            'arctan': self.arctan,
-        }
-
-    def sin(self, value):
+    def sin(self, value):   #调用sin计算公式mySin
         return mySin(value)
+        # return math.sin(value)
 
-
-    def arcsin(self, value):
+    def arcsin(self, value): #调用arcsin计算公式asin
         return invert_angle_to_rad(asin(value))
+        # return math.asin(value)
 
-    def cos(self, value):
+    def cos(self, value):  #调用cos计算公式myCos
         return myCos(value)
+        # return math.cos(value)
 
-    def arctan(self, value):
+    def arctan(self, value):   #调用arctan计算公式atan
         return atan(value)
-
+        # return math.atan(value)
 
     def get_func_name(self):
         return sorted(self.valueFunctions.keys())
@@ -41,15 +36,25 @@ class Interface_method:
         else:
             return self.valueFunctions[name](value)
 
+####################-选择计算功能-#######################
+    def __init__(self):
+        self.valueFunctions = {
+            'sin': self.sin,
+            'arcsin': self.arcsin,
+            'cos': self.cos,
+            'arctan': self.arctan,
+        }
 
+###################-界面设计-#########################
 class Example(QWidget):
 
     def __init__(self):
         super().__init__()
         self.method = Interface_method()
         self.initUI()
-    #UI设计
+
     def initUI(self):
+        # adaptive screen resolution
         self.desktop = QApplication.desktop()
         self.screenRect = self.desktop.screenGeometry()
         self.height = self.screenRect.height()
@@ -57,9 +62,7 @@ class Example(QWidget):
         self.setFixedSize(int(self.width * 0.2), int(self.width * 0.2 * 0.3))
 
         self.center()
-        self.setWindowTitle('Calculator')
-
-
+        self.setWindowTitle('计算器')
 
         self.btn_Calc = QPushButton('计算', self)
         self.btn_Calc.clicked.connect(self.btn_Calc_on_click)
@@ -68,11 +71,11 @@ class Example(QWidget):
         self.cb_method.addItems(self.method.get_func_name())
         self.cb_method.currentIndexChanged.connect(self.cb_method_changed)
 
-        self.btn_format_input = QPushButton('角度制', self)
+        self.btn_format_input = QPushButton('deg', self)
         self.btn_format_input.clicked.connect(self.btn_format_on_click)
         self.btn_format_input.setEnabled(False)
 
-        self.btn_format_output = QPushButton('角度制', self)
+        self.btn_format_output = QPushButton('deg', self)
         self.btn_format_output.clicked.connect(self.btn_format_on_click)
 
         self.qle_input = QLineEdit(self)
@@ -82,7 +85,7 @@ class Example(QWidget):
         self.qle_output = QLineEdit(self)
         self.qle_output.setFocusPolicy(Qt.NoFocus)
 
-        self.qlb_result = QLabel('结果', self)
+        self.qlb_result = QLabel('result', self)
 
         self.hbox_input = QHBoxLayout()
         self.hbox_output = QHBoxLayout()
@@ -99,21 +102,22 @@ class Example(QWidget):
         self.vbox.addLayout(self.hbox_input)
         self.vbox.addLayout(self.hbox_output)
         self.vbox.addWidget(self.btn_Calc)
+        # vbox.setContentsMargins(0,0,0,0)
         self.setLayout(self.vbox)
         self.show()
 
-    # 将计算UI放置屏幕中间
+    # set window location at the center of screen
     def center(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-    #
+######################-输入数据检查格式-##############################
     def input_format_check(self):
         try:
             str_input = self.qle_input.text().strip();
             self.method.get_func_result(self.cb_method.currentText(), float(eval(str_input)),
-                                        self.btn_format_input.text() == "角度制" and self.btn_format_input.isEnabled() or self.btn_format_output.text() == "角度制" and self.btn_format_output.isEnabled())
+                                        self.btn_format_input.text() == "deg" and self.btn_format_input.isEnabled() or self.btn_format_output.text() == "deg" and self.btn_format_output.isEnabled())
         except:
             self.qle_input.setStyleSheet("color: red;")
             self.btn_Calc.setEnabled(False)
@@ -122,6 +126,7 @@ class Example(QWidget):
             self.btn_Calc.setEnabled(True)
 
     flag = 0
+    ###################-弧度角度格式-######################
     def cb_method_changed(self):
         if "arc" in self.cb_method.currentText():
             self.btn_format_input.setEnabled(False)
@@ -136,8 +141,8 @@ class Example(QWidget):
     def btn_format_on_click(self):
         sender = self.sender()
         text = sender.text()
-        sender.setText("弧度制" if text == "角度制" else "角度制")
-
+        sender.setText("rad" if text == "deg" else "deg")
+##################-计算结果-###########################
     def btn_Calc_on_click(self):
         str_input = self.qle_input.text().strip();
         if (str_input == ''):
@@ -145,7 +150,7 @@ class Example(QWidget):
         try:
             self.qle_output.setText(
                 str(self.method.get_func_result(self.cb_method.currentText(), float(eval(str_input)),
-                                                self.btn_format_input.text() == "角度制" and self.btn_format_input.isEnabled() or self.btn_format_output.text() == "角度制" and self.btn_format_output.isEnabled())))
+                                                self.btn_format_input.text() == "deg" and self.btn_format_input.isEnabled() or self.btn_format_output.text() == "deg" and self.btn_format_output.isEnabled())))
         except:
             pass
 
